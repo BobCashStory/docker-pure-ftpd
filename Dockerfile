@@ -4,19 +4,18 @@ FROM debian:stretch as builder
 # properly setup debian sources
 ENV DEBIAN_FRONTEND noninteractive
 RUN echo "deb http://http.debian.net/debian stretch main\n\
-deb-src http://http.debian.net/debian stretch main\n\
-deb http://http.debian.net/debian stretch-updates main\n\
-deb-src http://http.debian.net/debian stretch-updates main\n\
-deb http://security.debian.org stretch/updates main\n\
-deb-src http://security.debian.org stretch/updates main\n\
-" > /etc/apt/sources.list
+	deb-src http://http.debian.net/debian stretch main\n\
+	deb http://http.debian.net/debian stretch-updates main\n\
+	deb-src http://http.debian.net/debian stretch-updates main\n\
+	deb http://security.debian.org stretch/updates main\n\
+	deb-src http://security.debian.org stretch/updates main\n\
+	" > /etc/apt/sources.list
 
 # install package building helpers
 # rsyslog for logging (ref https://github.com/stilliard/docker-pure-ftpd/issues/17)
 RUN apt-get -y update && \
-	apt-get -y --force-yes --fix-missing install dpkg-dev debhelper &&\
+	apt-get -y --force-yes --fix-missing install dpkg-dev debhelper && \
 	apt-get -y build-dep pure-ftpd
-	
 
 # Build from source - we need to remove the need for CAP_SYS_NICE and CAP_DAC_READ_SEARCH
 RUN mkdir /tmp/pure-ftpd/ && \
@@ -32,7 +31,7 @@ RUN mkdir /tmp/pure-ftpd/ && \
 FROM debian:stretch
 
 # feel free to change this ;)
-LABEL maintainer "Andrew Stilliard <andrew.stilliard@gmail.com>"
+LABEL maintainer "Martin Donadieu <martindonadieu@gmail.com>"
 
 # install dependencies
 # FIXME : libcap2 is not a dependency anymore. .deb could be fixed to avoid asking this dependency
@@ -46,9 +45,16 @@ RUN apt-get -y update && \
 	libcap2 \
 	libpam0g \
 	libssl1.1 \
-	openssl
+	openssl \
+	python3 && \
+	pip3 install Flask chaperone && \
+	# Create folder for chaperone
+	mkdir -p /etc/chaperone.d
 
 COPY --from=builder /tmp/pure-ftpd/*.deb /tmp/pure-ftpd/
+
+# Copy chaperone config
+COPY confs/chaperone.conf /etc/chaperone.d/chaperone.conf
 
 # install the new deb files
 RUN dpkg -i /tmp/pure-ftpd/pure-ftpd-common*.deb &&\
@@ -69,8 +75,8 @@ RUN echo "" >> /etc/rsyslog.conf && \
 	echo "Updated /etc/rsyslog.conf with /var/log/pure-ftpd/pureftpd.log"
 
 # setup run/init file
-COPY run.sh /run.sh
-RUN chmod u+x /run.sh
+COPY run_pure-ftpd.sh /usr/local/bin/run_pure-ftpd.sh
+RUN chmod u+x /usr/local/bin/run_pure-ftpd.sh
 
 # default publichost, you'll need to set this for passive support
 ENV PUBLICHOST localhost
@@ -79,6 +85,6 @@ ENV PUBLICHOST localhost
 VOLUME ["/home/ftpusers", "/etc/pure-ftpd/passwd"]
 
 # startup
-CMD /run.sh -l puredb:/etc/pure-ftpd/pureftpd.pdb -E -j -R -P $PUBLICHOST
+ENTRYPOINT ["/usr/bin/chaperone"]
 
-EXPOSE 21 30000-30009
+EXPOSE 21 30000-30099

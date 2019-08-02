@@ -98,7 +98,7 @@ fi
 # Set a default value to the env var FTP_PASSIVE_PORTS
 if [ -z "$FTP_PASSIVE_PORTS" ]
 then
-    FTP_PASSIVE_PORTS=30000:30009
+    FTP_PASSIVE_PORTS=30000:30099
 fi
 
 # Set passive port range in pure-ftpd options if not already existent
@@ -111,7 +111,7 @@ fi
 # Set a default value to the env var FTP_MAX_CLIENTS
 if [ -z "$FTP_MAX_CLIENTS" ]
 then
-    FTP_MAX_CLIENTS=5
+    FTP_MAX_CLIENTS=50
 fi
 
 # Set max clients in pure-ftpd options if not already existent
