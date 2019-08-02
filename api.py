@@ -1,8 +1,15 @@
 from flask import Flask, request, jsonify
 import os
 import subprocess
+import secrets
 
 app = Flask(__name__)
+
+apiKey = secrets.token_hex(20)
+if os.environ['X_API_KEY'] is not None:
+    apiKey = os.environ['X_API_KEY']
+else:
+    print("Your X_API_KEY is: " + apiKey)
 
 
 def goodApiKey(headers):
