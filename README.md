@@ -16,10 +16,10 @@ https://hub.docker.com/r/stilliard/pure-ftpd/
 
 Pull down latest version with docker:
 ```bash
-docker pull stilliard/pure-ftpd:hardened
+docker pull cashstory/pure-ftpd
 ```
 
-**Often needing to run as `sudo`, e.g. `sudo docker pull stilliard/pure-ftpd`**
+**Often needing to run as `sudo`, e.g. `sudo docker pull cashstory/pure-ftpd`**
 
 ----------------------------------------
 
@@ -29,13 +29,13 @@ This is because rebuilding the entire docker image via a fork can be *very* slow
 To change the command run on start you could use the `command:` option if using `docker-compose`, or with [`docker run`](https://docs.docker.com/engine/reference/run/) directly you could use:
 
 ```
-docker run --rm -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 stilliard/pure-ftpd:hardened bash /run.sh -c 30 -C 10 -l puredb:/etc/pure-ftpd/pureftpd.pdb -E -j -R -P localhost -p 30000:30059
+docker run --rm -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 cashstory/pure-ftpd:hardened bash /run.sh -c 30 -C 10 -l puredb:/etc/pure-ftpd/pureftpd.pdb -E -j -R -P localhost -p 30000:30059 -e "X_API_KEY=YOURKEY"
 ```
 
 To extend it you can create a new project with a `DOCKERFILE` like so:
 
 ```
-FROM stilliard/pure-ftpd
+FROM cashstory/pure-ftpd
 
 # e.g. you could change the defult command run:
 CMD /run.sh -c 30 -C 10 -l puredb:/etc/pure-ftpd/pureftpd.pdb -E -j -R -P $PUBLICHOST -p 30000:30059
@@ -48,7 +48,7 @@ CMD /run.sh -c 30 -C 10 -l puredb:/etc/pure-ftpd/pureftpd.pdb -E -j -R -P $PUBLI
 Starting it 
 ------------------------------
 
-`docker run -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 -e "PUBLICHOST=localhost" stilliard/pure-ftpd:hardened`
+`docker run -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 -e "PUBLICHOST=localhost" cashstory/pure-ftpd:hardened`
 
 *Or for your own image, replace stilliard/pure-ftpd with the name you built it with, e.g. my-pure-ftp*
 
@@ -96,6 +96,45 @@ pure-pw useradd bob -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u ftpuser -d /h
 
 More info on usage here: https://download.pureftpd.org/pure-ftpd/doc/README.Virtual-Users
 
+Example usage using api
+------------------------------
+
+To add user
+curl -X POST --header "X-api-key:YOURAPIKEY" -F 'username=davidwalsh' -F 'password=toto' localhost:5000/user/add
+
+To get user info
+curl -X GET --header "X-api-key:YOURAPIKEY" -F 'username=davidwalsh' localhost:5000/user/info
+
+To delete user
+curl -X POST --header "X-api-key:YOURAPIKEY" -F 'username=davidwalsh' -F 'password=toto' localhost:5000/user/del
+
+To get user info
+curl -X GET --header "X-api-key:YOURAPIKEY" -F 'username=davidwalsh' -F 'password=toto' localhost:5000/user/info
+
+To update user
+curl -X PUT --header "X-api-key:YOURAPIKEY" -F 'username=davidwalsh' -F 'directory=toto' localhost:5000/user/edit
+
+all allowed config for `add` and `edit`, to understand better check https://download.pureftpd.org/pub/pure-ftpd/doc/README.Virtual-Users
+```
+{
+chroot: boolean,
+directory: string,
+download_bandwidth: number,
+upload_bandwidth: number,
+max_files_number: number,
+max_files_Mbytes: number,
+upload_ratio: number,
+download_ratio: number,
+allow_client_ip: string,
+deny_client_ip: string,
+allow_local_ip: string,
+deny_local_ip: string,
+max_concurrent_sessions: number,
+max_concurrent_login_attempts: number,
+memory_reserve_password_hashing: number,
+allowed_range_day: string,
+}
+```
 
 Test your connection
 -------------------------
