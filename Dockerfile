@@ -47,6 +47,7 @@ RUN apt-get -y update && \
 	libssl1.1 \
 	openssl \
 	python3 \
+	python3-setuptools \
 	python3-pip && \
 	pip3 install Flask chaperone && \
 	# Create folder for chaperone
