@@ -1,13 +1,13 @@
-#!/usr/local/bin/python3
+#!/bin/python3
 
 from flask import Flask, request, jsonify
 import os
 import subprocess
-import secrets
+from os import urandom
 
 app = Flask(__name__)
 
-apiKey = secrets.token_hex(20)
+apiKey = urandom(30).hex()
 if os.environ['X_API_KEY'] is not None:
     apiKey = os.environ['X_API_KEY']
 else:

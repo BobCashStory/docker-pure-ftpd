@@ -55,9 +55,6 @@ RUN apt-get -y update && \
 
 COPY --from=builder /tmp/pure-ftpd/*.deb /tmp/pure-ftpd/
 
-# Copy chaperone config
-COPY confs/chaperone.conf /etc/chaperone.d/chaperone.conf
-
 # install the new deb files
 RUN dpkg -i /tmp/pure-ftpd/pure-ftpd-common*.deb &&\
 	dpkg -i /tmp/pure-ftpd/pure-ftpd_*.deb && \
@@ -76,9 +73,13 @@ RUN echo "" >> /etc/rsyslog.conf && \
 	echo "ftp.* /var/log/pure-ftpd/pureftpd.log" >> /etc/rsyslog.conf && \
 	echo "Updated /etc/rsyslog.conf with /var/log/pure-ftpd/pureftpd.log"
 
+
+# Copy chaperone config
+COPY confs/chaperone.conf /etc/chaperone.d/chaperone.conf
+
 # copy api
-COPY api.py /usr/local/bin/api.py
-RUN chmod u+x /usr/local/bin/api.py
+COPY api.py /bin/api.py
+RUN chmod u+x /bin/api.py
 
 # setup run/init file
 COPY run_pure-ftpd.sh /usr/local/bin/run_pure-ftpd.sh
