@@ -1,3 +1,5 @@
+#!/usr/local/bin/python3
+
 from flask import Flask, request, jsonify
 import os
 import subprocess

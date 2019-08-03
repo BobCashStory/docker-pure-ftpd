@@ -76,6 +76,10 @@ RUN echo "" >> /etc/rsyslog.conf && \
 	echo "ftp.* /var/log/pure-ftpd/pureftpd.log" >> /etc/rsyslog.conf && \
 	echo "Updated /etc/rsyslog.conf with /var/log/pure-ftpd/pureftpd.log"
 
+# copy api
+COPY api.py /usr/local/bin/api.py
+RUN chmod u+x /usr/local/bin/api.py
+
 # setup run/init file
 COPY run_pure-ftpd.sh /usr/local/bin/run_pure-ftpd.sh
 RUN chmod u+x /usr/local/bin/run_pure-ftpd.sh
