@@ -87,6 +87,6 @@ ENV PUBLICHOST localhost
 VOLUME ["/home/ftpusers", "/etc/pure-ftpd/passwd"]
 
 # startup
-ENTRYPOINT ["/usr/bin/chaperone"]
+ENTRYPOINT ["chaperone"]
 
 EXPOSE 21 30000-30099
