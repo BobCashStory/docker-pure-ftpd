@@ -8,7 +8,7 @@ from os import urandom
 app = Flask(__name__)
 
 apiKey = urandom(30).hex()
-if os.environ['X_API_KEY'] is not None:
+if os.getenv('X_API_KEY') is not None:
     apiKey = os.environ['X_API_KEY']
 else:
     print("Your X_API_KEY is: " + apiKey)
@@ -16,7 +16,7 @@ else:
 
 def goodApiKey(headers):
     auth = headers.get("X-Api-Key")
-    if auth != os.environ['X_API_KEY']:
+    if auth != apiKey:
         return False
     else:
         return True
