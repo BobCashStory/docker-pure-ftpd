@@ -29,7 +29,7 @@ This is because rebuilding the entire docker image via a fork can be *very* slow
 To change the command run on start you could use the `command:` option if using `docker-compose`, or with [`docker run`](https://docs.docker.com/engine/reference/run/) directly you could use:
 
 ```
-docker run --rm -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 cashstory/pure-ftpd:hardened bash /run.sh -c 30 -C 10 -l puredb:/etc/pure-ftpd/pureftpd.pdb -E -j -R -P localhost -p 30000:30059 -e "X_API_KEY=YOURKEY"
+docker run --rm -d --name ftpd_server -p 21:21 -p 30000-30099:30000-30099 cashstory/pure-ftpd:hardened bash /run.sh -c 30 -C 10 -l puredb:/etc/pure-ftpd/pureftpd.pdb -E -j -R -P localhost -p 30000:30059 -e "X_API_KEY=YOURKEY"
 ```
 
 To extend it you can create a new project with a `DOCKERFILE` like so:
@@ -48,7 +48,7 @@ CMD /run.sh -c 30 -C 10 -l puredb:/etc/pure-ftpd/pureftpd.pdb -E -j -R -P $PUBLI
 Starting it 
 ------------------------------
 
-`docker run -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 -e "PUBLICHOST=localhost" cashstory/pure-ftpd:hardened`
+`docker run -d --name ftpd_server -p 21:21 -p 30000-30099:30000-30099 -e "PUBLICHOST=localhost" cashstory/pure-ftpd:hardened`
 
 *Or for your own image, replace stilliard/pure-ftpd with the name you built it with, e.g. my-pure-ftp*
 
@@ -155,7 +155,7 @@ We have a simple [example of the docker compose](https://github.com/stilliard/do
 
 Max clients
 -------------------------
-By default we set 5 max clients at once, but you can increase this by using the following environment variable `FTP_MAX_CLIENTS`, e.g. to `FTP_MAX_CLIENTS=50` and then also increasing the number of public ports opened from `FTP_PASSIVE_PORTS=30000:30009` `FTP_PASSIVE_PORTS=30000:30099`. You'll also want to open those ports when running docker run.
+By default we set 50 max clients at once, but you can increase this by using the following environment variable `FTP_MAX_CLIENTS`, e.g. to `FTP_MAX_CLIENTS=500` and then also increasing the number of public ports opened from `FTP_PASSIVE_PORTS=30000:30099` `FTP_PASSIVE_PORTS=30000:30199`. You'll also want to open those ports when running docker run.
 In addition you can specify the maximum connections per ip by setting the environment variable `FTP_MAX_CONNECTIONS`. By default the value is 5.
 
 All Pure-ftpd flags available:
@@ -210,14 +210,14 @@ Our default pure-ftpd options explained
 
 ```
 /usr/sbin/pure-ftpd # path to pure-ftpd executable
--c 5 # --maxclientsnumber (no more than 5 people at once)
+-c 50 # --maxclientsnumber (no more than 50 people at once)
 -C 5 # --maxclientsperip (no more than 5 requests from the same ip)
 -l puredb:/etc/pure-ftpd/pureftpd.pdb # --login (login file for virtual users)
 -E # --noanonymous (only real users)
 -j # --createhomedir (auto create home directory if it doesnt already exist)
 -R # --nochmod (prevent usage of the CHMOD command)
 -P $PUBLICHOST # IP/Host setting for PASV support, passed in your the PUBLICHOST env var
--p 30000:30009 # PASV port range (10 ports for 5 max clients)
+-p 30000:30099 # PASV port range (100 ports for 50 max clients)
 -tls 1 # Enables optional TLS support
 ```
 
@@ -255,7 +255,7 @@ docker volume create --name my-db-volume
 
 Specify it when running the container:
 ```
-docker run -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 -e "PUBLICHOST=localhost" -v my-db-volume:/etc/pure-ftpd/passwd stilliard/pure-ftpd:hardened
+docker run -d --name ftpd_server -p 21:21 -p 30000-30099:30000-30099 -e "PUBLICHOST=localhost" -v my-db-volume:/etc/pure-ftpd/passwd stilliard/pure-ftpd:hardened
 ```
 
 When an user is added, you need to use the password file which is in the volume:
