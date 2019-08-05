@@ -16,10 +16,10 @@ https://hub.docker.com/r/stilliard/pure-ftpd/
 
 Pull down latest version with docker:
 ```bash
-docker pull cashstory/pure-ftpd
+docker pull cashstory/pureftpd-api
 ```
 
-**Often needing to run as `sudo`, e.g. `sudo docker pull cashstory/pure-ftpd`**
+**Often needing to run as `sudo`, e.g. `sudo docker pull cashstory/pureftpd-api`**
 
 ----------------------------------------
 
@@ -29,13 +29,13 @@ This is because rebuilding the entire docker image via a fork can be *very* slow
 To change the command run on start you could use the `command:` option if using `docker-compose`, or with [`docker run`](https://docs.docker.com/engine/reference/run/) directly you could use:
 
 ```
-docker run --rm -d --name ftpd_server -p 21:21 -p 30000-30099:30000-30099 cashstory/pure-ftpd:hardened bash /run.sh -c 30 -C 10 -l puredb:/etc/pure-ftpd/pureftpd.pdb -E -j -R -P localhost -p 30000:30059 -e "X_API_KEY=YOURKEY"
+docker run --rm -d --name ftpd_server -p 21:21 -p 30000-30099:30000-30099 cashstory/pureftpd-api:hardened bash /run.sh -c 30 -C 10 -l puredb:/etc/pure-ftpd/pureftpd.pdb -E -j -R -P localhost -p 30000:30059 -e "X_API_KEY=YOURKEY"
 ```
 
 To extend it you can create a new project with a `DOCKERFILE` like so:
 
 ```
-FROM cashstory/pure-ftpd
+FROM cashstory/pureftpd-api
 
 # e.g. you could change the defult command run:
 CMD /run.sh -c 30 -C 10 -l puredb:/etc/pure-ftpd/pureftpd.pdb -E -j -R -P $PUBLICHOST -p 30000:30059
@@ -48,7 +48,7 @@ CMD /run.sh -c 30 -C 10 -l puredb:/etc/pure-ftpd/pureftpd.pdb -E -j -R -P $PUBLI
 Starting it 
 ------------------------------
 
-`docker run -d --name ftpd_server -p 21:21 -p 30000-30099:30000-30099 -e "PUBLICHOST=localhost" cashstory/pure-ftpd:hardened`
+`docker run -d --name ftpd_server -p 21:21 -p 30000-30099:30000-30099 -e "PUBLICHOST=localhost" cashstory/pureftpd-api:hardened`
 
 *Or for your own image, replace stilliard/pure-ftpd with the name you built it with, e.g. my-pure-ftp*
 

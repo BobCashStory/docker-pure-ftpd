@@ -1,17 +1,17 @@
-version: '2'
+version: '3.5'
 
 # Usage example: https://github.com/stilliard/docker-pure-ftpd/wiki/Docker-stack-with-Wordpress-&-FTP
 
 services:
   ftpd_server:
-    image: stilliard/pure-ftpd:hardened
-    container_name: pure-ftpd
+    image: cashstory/pureftpd-api
+    container_name: pureftpd-api
     ports:
       - "21:21"
-      - "30000-30009:30000-30009"
+      - "30000-30099:30000-30099"
     volumes: # remember to replace /folder_on_disk/ with the path to where you want to store the files on the host machine
-      - "/folder_on_disk/data:/home/username/"
-      - "/folder_on_disk/passwd:/etc/pure-ftpd/passwd"
+      - "ftpusers_home:/home/username/"
+      - "ftpusers_users:/etc/pure-ftpd/passwd"
 # uncomment for ssl/tls, see https://github.com/stilliard/docker-pure-ftpd#tls
 #      - "/folder_on_disk/ssl:/etc/ssl/private/"
     environment:
@@ -22,3 +22,9 @@ services:
 # also for ssl/tls:
 #      ADDED_FLAGS: "--tls=2"
     restart: always
+
+volumes:
+  ftpusers_home: 
+    driver: local
+  ftpusers_users: 
+    driver: local
