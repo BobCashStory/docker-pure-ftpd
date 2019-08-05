@@ -94,4 +94,4 @@ VOLUME ["/home/ftpusers", "/etc/pure-ftpd/passwd"]
 # startup
 ENTRYPOINT ["chaperone"]
 
-EXPOSE 21 30000-30099
+EXPOSE 5000 21 30000-30099

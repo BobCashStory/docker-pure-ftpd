@@ -1,10 +1,10 @@
 Docker Pure-ftpd Server
 ============================
-https://hub.docker.com/r/stilliard/pure-ftpd/
+https://hub.docker.com/r/cashstory/pureftpd-api/
 
 [![Build Status](https://travis-ci.org/stilliard/docker-pure-ftpd.svg?branch=master)](https://travis-ci.org/stilliard/docker-pure-ftpd)
-[![Docker Build Status](https://img.shields.io/docker/build/stilliard/pure-ftpd.svg)](https://hub.docker.com/r/stilliard/pure-ftpd/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/stilliard/pure-ftpd.svg)](https://hub.docker.com/r/stilliard/pure-ftpd/)
+[![Docker Build Status](https://img.shields.io/docker/build/cashstory/pureftpd-api.svg)](https://hub.docker.com/r/cashstory/pureftpd-api/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/cashstory/pureftpd-api.svg)](https://hub.docker.com/r/cashstory/pureftpd-api/)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fstilliard%2Fdocker-pure-ftpd.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fstilliard%2Fdocker-pure-ftpd?ref=badge_shield)
 
 
@@ -50,7 +50,7 @@ Starting it
 
 `docker run -d --name ftpd_server -p 21:21 -p 30000-30099:30000-30099 -e "PUBLICHOST=localhost" cashstory/pureftpd-api:hardened`
 
-*Or for your own image, replace stilliard/pure-ftpd with the name you built it with, e.g. my-pure-ftp*
+*Or for your own image, replace cashstory/pureftpd-api with the name you built it with, e.g. my-pure-ftp*
 
 You can also pass ADDED_FLAGS as an env variable to add additional options such as --tls to the pure-ftpd command.  
 e.g. ` -e "ADDED_FLAGS=--tls=2" `
@@ -70,7 +70,7 @@ To create a user on the ftp container, use the following environment variables: 
 
 Example usage:
 
-`docker run -e FTP_USER_NAME=bob -e FTP_USER_PASS=12345 -e FTP_USER_HOME=/home/bob stilliard/pure-ftpd`
+`docker run -e FTP_USER_NAME=bob -e FTP_USER_PASS=12345 -e FTP_USER_HOME=/home/bob cashstory/pureftpd-api`
 
 If you wish to set the `UID` & `GID` of the FTP user, use the `FTP_USER_UID` & `FTP_USER_GID` environment variables.
 
@@ -199,7 +199,7 @@ Tags available for different versions
 *Check the tags on github for available versions, feel free to submit issues and/or pull requests for newer versions*
 
 Usage of specific tags: 
-`sudo docker pull stilliard/pure-ftpd:hardened-1.0.36`
+`sudo docker pull cashstory/pureftpd-api:hardened-1.0.36`
 
 **An arm64 build is also available here:** https://hub.docker.com/r/zhabba/pure-ftpd-arm64 *- Thanks @zhabba*
 
@@ -255,7 +255,7 @@ docker volume create --name my-db-volume
 
 Specify it when running the container:
 ```
-docker run -d --name ftpd_server -p 21:21 -p 30000-30099:30000-30099 -e "PUBLICHOST=localhost" -v my-db-volume:/etc/pure-ftpd/passwd stilliard/pure-ftpd:hardened
+docker run -d --name ftpd_server -p 21:21 -p 30000-30099:30000-30099 -e "PUBLICHOST=localhost" -v my-db-volume:/etc/pure-ftpd/passwd cashstory/pureftpd-api:hardened
 ```
 
 When an user is added, you need to use the password file which is in the volume:

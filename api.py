@@ -11,7 +11,7 @@ apiKey = urandom(30).hex()
 if os.getenv('X_API_KEY') is not None:
     apiKey = os.environ['X_API_KEY']
 else:
-    print("Your X_API_KEY is: " + apiKey)
+    print("Your X-Api-Key is: " + apiKey)
 
 
 def goodApiKey(headers):
@@ -39,42 +39,42 @@ def parseInfo(res):
 
 def jsonToComand(json):
     command = ''
-    if json.chroot == True:
+    if json['chroot'] is not None and json['chroot'] == True:
         command = '-d '
     else:
         command = '-D '
-    if json.directory is not None:
-        command += json.directory + " "
+    if json['directory is not None'] is not None:
+        command += json['directory'] + " "
     else:
-        command += json.username + " "
-    if json.download_bandwidth:
-        command += "-t " + json.download_bandwidth + " "
-    if json.upload_bandwidth:
-        command += "-T " + json.upload_bandwidth + " "
-    if json.max_files_number:
-        command += "-n " + json.max_files_number + " "
-    if json.max_files_Mbytes:
-        command += "-N " + json.max_files_Mbytes + " "
-    if json.upload_ratio:
-        command += "-q " + json.upload_ratio + " "
-    if json.download_ratio:
-        command += "-Q " + json.download_ratio + " "
-    if json.allow_client_ip:
-        command += "-r " + json.allow_client_ip + " "
-    if json.deny_client_ip:
-        command += "-R " + json.deny_client_ip + " "
-    if json.allow_local_ip:
-        command += "-i " + json.allow_local_ip + " "
-    if json.deny_local_ip:
-        command += "-I " + json.deny_local_ip + " "
-    if json.max_concurrent_sessions:
-        command += "-y " + json.max_concurrent_sessions + " "
-    if json.max_concurrent_login_attempts:
-        command += "-C " + json.max_concurrent_login_attempts + " "
-    if json.memory_reserve_password_hashing:
-        command += "-M " + json.memory_reserve_password_hashing + " "
-    if json.allowed_range_day:
-        command += "-z " + json.allowed_range_day + " "
+        command += json['username'] + " "
+    if json['download_bandwidth'] is not None:
+        command += "-t " + json['download_bandwidth'] + " "
+    if json['upload_bandwidth'] is not None:
+        command += "-T " + json['upload_bandwidth'] + " "
+    if json['max_files_number'] is not None:
+        command += "-n " + json['max_files_number'] + " "
+    if json['max_files_Mbytes'] is not None:
+        command += "-N " + json['max_files_Mbytes'] + " "
+    if json['upload_ratio'] is not None:
+        command += "-q " + json['upload_ratio'] + " "
+    if json['download_ratio'] is not None:
+        command += "-Q " + json['download_ratio'] + " "
+    if json['allow_client_ip'] is not None:
+        command += "-r " + json['allow_client_ip'] + " "
+    if json['deny_client_ip'] is not None:
+        command += "-R " + json['deny_client_ip'] + " "
+    if json['allow_local_ip'] is not None:
+        command += "-i " + json['allow_local_ip'] + " "
+    if json['deny_local_ip'] is not None:
+        command += "-I " + json['deny_local_ip'] + " "
+    if json['max_concurrent_sessions'] is not None:
+        command += "-y " + json['max_concurrent_sessions'] + " "
+    if json['max_concurrent_login_attempts'] is not None:
+        command += "-C " + json['max_concurrent_login_attempts'] + " "
+    if json['memory_reserve_password_hashing'] is not None:
+        command += "-M " + json['memory_reserve_password_hashing'] + " "
+    if json['allowed_range_day'] is not None:
+        command += "-z " + json['allowed_range_day'] + " "
     # force commit changes
     command += "-m"
     # -D/-d < home directory > [-c < gecos > ]
@@ -161,4 +161,4 @@ def addUser():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
