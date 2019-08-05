@@ -82,8 +82,8 @@ COPY api.py /bin/api.py
 RUN chmod u+x /bin/api.py
 
 # setup run/init file
-COPY run_pure-ftpd.sh /usr/local/bin/run_pure-ftpd.sh
-RUN chmod u+x /usr/local/bin/run_pure-ftpd.sh
+COPY run_pure_ftpd.sh /usr/local/bin/run_pure_ftpd.sh
+RUN chmod u+x /usr/local/bin/run_pure_ftpd.sh
 
 # default publichost, you'll need to set this for passive support
 ENV PUBLICHOST localhost

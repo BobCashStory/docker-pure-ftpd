@@ -20,6 +20,7 @@ services:
       FTP_USER_NAME: username
       FTP_USER_PASS: mypass
       FTP_USER_HOME: /home/username
+      X_API_KEY: 75ea1ee78274
 # also for ssl/tls:
 #      ADDED_FLAGS: "--tls=2"
     restart: always
