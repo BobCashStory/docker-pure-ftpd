@@ -135,6 +135,21 @@ def jsonToCommandArr(json):
     return command
 
 
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({'error': 'Not found'}), 404
+
+
+@app.errorhandler(405)
+def not_allowed(error):
+    return jsonify({'error': 'Method not allowed. The method is not allowed for the requested URL.'}), 405
+
+
+@app.errorhandler(500)
+def not_working(error):
+    return jsonify({'error': 'Something wrong happen'}), 500
+
+
 @app.route('/user/del', methods=['POST'])
 def delUser():
     if goodApiKey(request.headers):
