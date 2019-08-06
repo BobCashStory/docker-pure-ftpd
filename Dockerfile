@@ -65,7 +65,7 @@ RUN apt-mark hold pure-ftpd pure-ftpd-common
 
 # setup ftpgroup and ftpuser
 RUN groupadd ftpgroup &&\
-	useradd -g ftpgroup -d /home/ftpusers -s /dev/null ftpuser
+	useradd -g ftpgroup -d /home/ftpusers -s /dev/null ftp
 
 # configure rsyslog logging
 RUN echo "" >> /etc/rsyslog.conf && \
@@ -89,7 +89,7 @@ RUN chmod u+x /usr/local/bin/run_pure_ftpd.sh
 ENV PUBLICHOST localhost
 
 # couple available volumes you may want to use
-VOLUME ["/home/ftpusers", "/etc/pure-ftpd/passwd"]
+VOLUME ["/home/ftpusers", "/etc/pure-ftpd"]
 
 # startup
 ENTRYPOINT ["chaperone"]

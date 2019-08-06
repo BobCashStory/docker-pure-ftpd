@@ -11,10 +11,10 @@ then
     rsyslogd
 fi
 
-PASSWD_FILE="/etc/pure-ftpd/passwd/pureftpd.passwd"
+PASSWD_FILE="/etc/pure-ftpd/pureftpd.passwd"
 
 # Load in any existing db from volume store
-if [ -e /etc/pure-ftpd/passwd/pureftpd.passwd ]
+if [ -e /etc/pure-ftpd/pureftpd.passwd ]
 then
     pure-pw mkdb /etc/pure-ftpd/pureftpd.pdb -f "$PASSWD_FILE"
 fi
@@ -62,7 +62,7 @@ $FTP_USER_PASS" > "$PWD_FILE"
     then
         PURE_PW_ADD_FLAGS="$PURE_PW_ADD_FLAGS -u $FTP_USER_UID"
     else
-        PURE_PW_ADD_FLAGS="$PURE_PW_ADD_FLAGS -u ftpuser"
+        PURE_PW_ADD_FLAGS="$PURE_PW_ADD_FLAGS -u ftp"
     fi
     if [ ! -z "$FTP_USER_GID" ]
     then
@@ -85,10 +85,10 @@ $FTP_USER_PASS" > "$PWD_FILE"
             echo " root user give $FTP_USER_HOME directory $FTP_USER_UID owner"
         fi
     else
-        if ! [[ $(ls -ld $FTP_USER_HOME | awk '{print $3}') = 'ftpuser' ]]
+        if ! [[ $(ls -ld $FTP_USER_HOME | awk '{print $3}') = 'ftp' ]]
         then
-            chown ftpuser "$FTP_USER_HOME"
-            echo " root user give $FTP_USER_HOME directory ftpuser owner"
+            chown ftp "$FTP_USER_HOME"
+            echo " root user give $FTP_USER_HOME directory ftp owner"
         fi
     fi
 

@@ -236,7 +236,7 @@ def addUser():
         username = request.json.get('username')
         options = jsonToCommandArr(request.json)
         options.append('-u')
-        options.append('ftpuser')
+        options.append('ftp')
         pureCmd = commandPureFtp('useradd', username, options)
         passpass = confirmPass(password)
         try:

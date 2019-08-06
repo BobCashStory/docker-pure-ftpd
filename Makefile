@@ -32,7 +32,7 @@ enter:
 
 # Setup test "bob" user with "test" as password
 setup-bob:
-	sudo docker exec -it ftpd_server sh -c "(echo test; echo test) | pure-pw useradd bob -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u ftpuser -d /home/ftpusers/bob"
+	sudo docker exec -it ftpd_server sh -c "(echo test; echo test) | pure-pw useradd bob -f /etc/pure-ftpd/pureftpd.passwd -m -u ftp -d /home/ftpusers/bob"
 	@echo "User bob setup with password: test"
 
 # simple test to list files, upload a file, download it to a new name, delete it via ftp and read the new local one to make sure it's in tact

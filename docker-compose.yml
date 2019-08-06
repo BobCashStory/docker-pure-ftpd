@@ -11,8 +11,8 @@ services:
       - "30000-30099:30000-30099"
       - "5000:5000"
     volumes: # remember to replace /folder_on_disk/ with the path to where you want to store the files on the host machine
-      - "ftpusers_home:/home/username/"
-      - "ftpusers_users:/etc/pure-ftpd/passwd"
+      - "ftpusers_home:/home"
+      - "ftpusers_users:/etc/pure-ftpd"
 # uncomment for ssl/tls, see https://github.com/stilliard/docker-pure-ftpd#tls
 #      - "/folder_on_disk/ssl:/etc/ssl/private/"
     environment:

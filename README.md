@@ -88,7 +88,7 @@ Example usage once inside
 
 Create an ftp user: `e.g. bob with chroot access only to /home/ftpusers/bob`
 ```bash
-pure-pw useradd bob -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u ftpuser -d /home/ftpusers/bob
+pure-pw useradd bob -f /etc/pure-ftpd/pureftpd.passwd -m -u ftp -d /home/ftpusers/bob
 ```
 *No restart should be needed.*
 
@@ -235,11 +235,11 @@ There are a few spots onto which you can mount a docker volume to configure the
 server and persist uploaded data. It's recommended to use them in production. 
 
   - `/home/ftpusers/` The ftp's data volume (by convention). 
-  - `/etc/pure-ftpd/passwd` A directory containing the single `pureftpd.passwd`
+  - `/etc/pure-ftpd` A directory containing the single `pureftpd.passwd`
     file which contains the user database (i.e., all virtual users, their
     passwords and their home directories). This is read on startup of the
     container and updated by the `pure-pw useradd -f /etc/pure-
-    ftpd/passwd/pureftpd.passwd ...` command.
+    ftpd/pureftpd.passwd ...` command.
   - `/etc/ssl/private/` A directory containing a single `pure-ftpd.pem` file
     with the server's SSL certificates for TLS support. Optional TLS is
     automatically enabled when the container finds this file on startup.
@@ -255,12 +255,12 @@ docker volume create --name my-db-volume
 
 Specify it when running the container:
 ```
-docker run -d --name ftpd_server -p 21:21 -p 30000-30099:30000-30099 -e "PUBLICHOST=localhost" -v my-db-volume:/etc/pure-ftpd/passwd cashstory/pureftpd-api:hardened
+docker run -d --name ftpd_server -p 21:21 -p 30000-30099:30000-30099 -e "PUBLICHOST=localhost" -v my-db-volume:/etc/pure-ftpd cashstory/pureftpd-api:hardened
 ```
 
 When an user is added, you need to use the password file which is in the volume:
 ```
-pure-pw useradd bob -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u ftpuser -d /home/ftpusers/bob
+pure-pw useradd bob -f /etc/pure-ftpd/pureftpd.passwd -m -u ftp -d /home/ftpusers/bob
 ```
 (Thanks to the -m option, you don't need to call *pure-pw mkdb* with this syntax).
 
@@ -269,7 +269,7 @@ Changing a password
 ---------------------
 e.g. to change the password for user "bob":
 ```
-pure-pw passwd bob -f /etc/pure-ftpd/passwd/pureftpd.passwd -m
+pure-pw passwd bob -f /etc/pure-ftpd/pureftpd.passwd -m
 ```
 
 ----------------------------------------
