@@ -87,7 +87,7 @@ def jsonToCommandArr(json):
         command.append("-n")
         command.append(json.get('max_files_number'))
     if json.get('max_files_Mbytes') is not None:
-        command.append("-n")
+        command.append("-N")
         command.append(json.get('max_files_Mbytes'))
     if json.get('upload_ratio') is not None:
         command.append("-q")
