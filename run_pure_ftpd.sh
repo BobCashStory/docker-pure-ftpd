@@ -4,13 +4,6 @@
 # e.g. -e "ADDED_FLAGS=--tls=2"
 PURE_FTPD_FLAGS=" $@ $ADDED_FLAGS "
 
-# start rsyslog
-if [[ "$PURE_FTPD_FLAGS" == *" -d "* ]] || [[ "$PURE_FTPD_FLAGS" == *"--verboselog"* ]]
-then
-    echo "Log enabled, see /var/log/messages"
-    rsyslogd
-fi
-
 PASSWD_FILE="/etc/pure-ftpd/pureftpd.passwd"
 
 # Load in any existing db from volume store
@@ -20,7 +13,7 @@ then
 fi
 
 # detect if using TLS (from volumed in file) but no flag set, set one
-if [ -e /etc/ssl/private/pure-ftpd.pem ] && [[ "$PURE_FTPD_FLAGS" != *"--tls"* ]]
+if [ -e /etc/ssl/private/pureftpd.pem ] && [[ "$PURE_FTPD_FLAGS" != *"--tls"* ]]
 then
     echo "TLS Enabled"
     PURE_FTPD_FLAGS="$PURE_FTPD_FLAGS --tls=1 "
@@ -95,39 +88,21 @@ $FTP_USER_PASS" > "$PWD_FILE"
     rm "$PWD_FILE"
 fi
 
-# Set a default value to the env var FTP_PASSIVE_PORTS
-if [ -z "$FTP_PASSIVE_PORTS" ]
-then
-    FTP_PASSIVE_PORTS=30000:30099
-fi
-
-# Set passive port range in pure-ftpd options if not already existent
+# Set passive port range in pureftpd options if not already existent
 if [[ $PURE_FTPD_FLAGS != *" -p "* ]]
 then
-    echo "Setting default port range to: $FTP_PASSIVE_PORTS"
-    PURE_FTPD_FLAGS="$PURE_FTPD_FLAGS -p $FTP_PASSIVE_PORTS"
+    echo "Setting default port range to: $MIN_PASV_PORT:$MAX_PASV_PORT"
+    PURE_FTPD_FLAGS="$PURE_FTPD_FLAGS -p $MIN_PASV_PORT:$MAX_PASV_PORT"
 fi
 
-# Set a default value to the env var FTP_MAX_CLIENTS
-if [ -z "$FTP_MAX_CLIENTS" ]
-then
-    FTP_MAX_CLIENTS=50
-fi
-
-# Set max clients in pure-ftpd options if not already existent
+# Set max clients in pureftpd options if not already existent
 if [[ $PURE_FTPD_FLAGS != *" -c "* ]]
 then
     echo "Setting default max clients to: $FTP_MAX_CLIENTS"
     PURE_FTPD_FLAGS="$PURE_FTPD_FLAGS -c $FTP_MAX_CLIENTS"
 fi
 
-# Set a default value to the env var FTP_MAX_CONNECTIONS
-if [ -z "$FTP_MAX_CONNECTIONS" ]
-then
-    FTP_MAX_CONNECTIONS=5
-fi
-
-# Set max connections per ip in pure-ftpd options if not already existent
+# Set max connections per ip in pureftpd options if not already existent
 if [[ $PURE_FTPD_FLAGS != *" -C "* ]]
 then
     echo "Setting default max connections per ip to: $FTP_MAX_CONNECTIONS"
@@ -136,7 +111,7 @@ fi
 
 # let users know what flags we've ended with (useful for debug)
 echo "Starting Pure-FTPd:"
-echo "  pure-ftpd $PURE_FTPD_FLAGS"
+echo "pure-ftpd $PURE_FTPD_FLAGS"
 
 # start pureftpd with requested flags
 exec /usr/sbin/pure-ftpd $PURE_FTPD_FLAGS

@@ -11,22 +11,25 @@ services:
       - "30000-30099:30000-30099"
       - "5000:5000"
     volumes: # remember to replace /folder_on_disk/ with the path to where you want to store the files on the host machine
-      - "ftpusers_home:/home"
-      - "ftpusers_users:/etc/pure-ftpd"
+      - ftpusers_home:/home/ftpusers
+      - ftpusers_conf:/etc/pure-ftpd
 # uncomment for ssl/tls, see https://github.com/stilliard/docker-pure-ftpd#tls
 #      - "/folder_on_disk/ssl:/etc/ssl/private/"
     environment:
-      PUBLICHOST: "localhost"
-      FTP_USER_NAME: username
-      FTP_USER_PASS: mypass
-      FTP_USER_HOME: /home/username
-      X_API_KEY: 75ea1ee78274
-# also for ssl/tls:
-#      ADDED_FLAGS: "--tls=2"
+      - PUBLICHOST="localhost"
+      - FTP_USER_NAME=username
+      - FTP_USER_PASS=mypass
+      - FTP_USER_HOME=/home/username
+      - X_API_KEY=75ea1ee78274
+      - TZ=Europe/Paris 
+      - ADDED_FLAGS=--tls=1
+      - TLS_CN=localhost
+      - TLS_ORG=TEST
+      - TLS_C=FR
     restart: always
 
 volumes:
   ftpusers_home: 
     driver: local
-  ftpusers_users: 
+  ftpusers_conf: 
     driver: local
