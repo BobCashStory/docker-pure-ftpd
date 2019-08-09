@@ -73,7 +73,7 @@ def jsonToCommandArr(json):
         command.append('-D')
     else:
         command.append('-d')
-    if json.get('directory is not None') is not None:
+    if json.get('directory') is not None:
         command.append(json.get('directory'))
     else:
         command.append("/home/ftpusers/" + json.get('username'))
