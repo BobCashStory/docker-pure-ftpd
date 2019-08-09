@@ -76,7 +76,8 @@ def jsonToCommandArr(json):
     if json.get('directory') is not None:
         command.append("/home/ftpusers" + json.get('directory'))
     else:
-        command.append("/home/ftpusers/" + json.get('username'))
+        folderName = json.get('username').replace('@', '__').replace('.', '_')
+        command.append("/home/ftpusers/" + folderName)
     if json.get('download_bandwidth') is not None:
         command.append("-t")
         command.append(json.get('download_bandwidth'))
