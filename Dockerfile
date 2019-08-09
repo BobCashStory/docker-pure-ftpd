@@ -57,8 +57,7 @@ RUN apk update && \
 	--with-peruserlimits \
 	--with-ratios \
 	--with-tls \
-	--without-inetd \
-	--without-nonalnum && \
+	--without-inetd && \
 	make install-strip && \
 	cd .. && \
 	rm -rf /tmp/* && \
