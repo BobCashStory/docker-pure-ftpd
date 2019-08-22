@@ -2,7 +2,7 @@ Docker Pure-ftpd Server with API
 ============================
 https://hub.docker.com/r/cashstory/pureftpd-api/
 
-Based on (stilliard pure ftpd)[https://github.com/stilliard/docker-pure-ftpd] thanks to his work !
+Based on [https://github.com/stilliard/docker-pure-ftpd](stilliard pure ftpd) thanks to his work !
 
 Starting it 
 ------------------------------
@@ -12,7 +12,7 @@ Starting it
 Setting runtime FTP options
 ------------------------------
 
-To check all available options go to (stilliard README)[https://github.com/stilliard/docker-pure-ftpd/blob/master/README.md]
+To check all available options go to [https://github.com/stilliard/docker-pure-ftpd/blob/master/README.md](stilliard README)
 
 The only env option in our docker-compose we provide in addition to stilliard image is
  `X_API_KEY` => if you don't provide it it will be auto created when you run the container.
