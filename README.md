@@ -2,22 +2,32 @@ Docker Pure-ftpd Server with API
 ============================
 https://hub.docker.com/r/cashstory/pureftpd-api/
 
-Based on [https://github.com/stilliard/docker-pure-ftpd](stilliard pure ftpd) thanks to his work !
+Based on [stilliard pure ftpd](https://github.com/stilliard/docker-pure-ftpd) thanks to his work !
+And [Chaperone](https://github.com/garywiz/chaperone) to manage our APi and pure-ftpd.
+
+
+----------------------------------------
 
 Starting it 
 ------------------------------
 
 `docker-compose up ftpd_server`
 
+----------------------------------------
+
 Setting runtime FTP options
 ------------------------------
 
-To check all available options go to [https://github.com/stilliard/docker-pure-ftpd/blob/master/README.md](stilliard README)
+To check all available options go to [stilliard README](https://github.com/stilliard/docker-pure-ftpd/blob/master/README.md)
+Keep in your mind, change docker command will not affect ftp command since now the image run with chaperon to manage both API and ftp process
+Fork this repo and edit chaperone conf instead.
 
 The only env option in our docker-compose we provide in addition to stilliard image is
  `X_API_KEY` => if you don't provide it it will be auto created when you run the container.
 Don't do it in production it will change at each restart.
  
+----------------------------------------
+
 Operating it though API
 ------------------------------
 
@@ -98,6 +108,8 @@ server and persist uploaded data. It's recommended to use them in production.
     container and updated by the `pure-pw useradd -f /etc/pure-
     ftpd/pureftpd.passwd ...` command.
 
+----------------------------------------
+
 Keep user database in a volume
 ------------------------------
 You may want to keep your user database through the successive image builds. It is possible with Docker volumes.
@@ -111,6 +123,9 @@ Specify it when running the container:
 ```
 docker run -d --name ftpd_server -p 21:21 -p 30000-30099:30000-30099 -e "PUBLICHOST=localhost" -v my-db-volume:/etc/pure-ftpd cashstory/pureftpd-api:hardened
 ```
+
+----------------------------------------
+
 Automatic TLS certificate generation
 ------------------------------
 
