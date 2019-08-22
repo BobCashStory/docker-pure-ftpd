@@ -29,7 +29,7 @@ def deleteUserFolder(username):
     username = username.replace('.', '').replace('/', '')
     # disable path injection in username
     path = "/home/ftpusers/" + username
-    cmd = ["rmdir",  "--ignore-fail-on-non-empty", path]
+    cmd = ["rmdir", "--ignore-fail-on-non-empty", path]
     return cmd
 
 
@@ -169,6 +169,7 @@ def delUser():
         options = jsonToCommandArr(request.json)
         pureCmd = commandPureFtp('userdel', username, options)
         delCmd = deleteUserFolder(username)
+        print("Delete cmd: " + delCmd, file=sys.stderr)
         try:
             subprocess.check_output(
                 pureCmd, universal_newlines=True, stderr=subprocess.STDOUT)
