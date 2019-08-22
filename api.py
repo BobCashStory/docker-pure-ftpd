@@ -168,16 +168,22 @@ def delUser():
         username = request.json.get('username').lower()
         options = jsonToCommandArr(request.json)
         pureCmd = commandPureFtp('userdel', username, options)
-        delCmd = deleteUserFolder(username)
-        print("Delete cmd: " + ' '.join(delCmd), file=sys.stderr)
         try:
             subprocess.check_output(
                 pureCmd, universal_newlines=True, stderr=subprocess.STDOUT)
-            subprocess.check_output(
-                delCmd, universal_newlines=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             print("Your error: " + cleanError(e.output), file=sys.stderr)
             return jsonify({"message": "ERROR: command", "code": e.returncode, "err": cleanError(e.output)}), 400
+        archive = request.json.get('archive')
+        if (archive is None or archive == 'false'):
+            delCmd = deleteUserFolder(username)
+            print("Delete cmd: " + ' '.join(delCmd), file=sys.stderr)
+            try:
+                subprocess.check_output(
+                    delCmd, universal_newlines=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                print("Your error: " + cleanError(e.output), file=sys.stderr)
+                return jsonify({"message": "ERROR: command", "code": e.returncode, "err": cleanError(e.output)}), 400
         return jsonify({"message": "OK: Deleted"}), 200
     else:
         return jsonify({"message": "ERROR: Unauthorized"}), 401
