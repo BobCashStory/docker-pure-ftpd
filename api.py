@@ -29,7 +29,7 @@ def deleteUserFolder(username):
     username = username.replace('.', '').replace('/', '')
     # disable path injection in username
     path = "/home/ftpusers/" + username
-    cmd = ["rmdir", "--ignore-fail-on-non-empty", path]
+    cmd = ["rm", "-rf", path]
     return cmd
 
 
