@@ -169,7 +169,7 @@ def delUser():
         options = jsonToCommandArr(request.json)
         pureCmd = commandPureFtp('userdel', username, options)
         delCmd = deleteUserFolder(username)
-        print("Delete cmd: " + ''.join(delCmd), file=sys.stderr)
+        print("Delete cmd: " + ' '.join(delCmd), file=sys.stderr)
         try:
             subprocess.check_output(
                 pureCmd, universal_newlines=True, stderr=subprocess.STDOUT)
