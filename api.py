@@ -26,8 +26,10 @@ def commandPureFtp(cmd, username, options):
 
 
 def deleteUserFolder(username):
+    username = username.replace('.', '').replace('/', '')
+    # disable path injection in username
     path = "/home/ftpusers/" + username
-    cmd = ["rmdir",  path]
+    cmd = ["rmdir",  "--ignore-fail-on-non-empty", path]
     return cmd
 
 
