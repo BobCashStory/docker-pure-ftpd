@@ -25,6 +25,12 @@ def commandPureFtp(cmd, username, options):
     return cmd
 
 
+def deleteUserFolder(username):
+    path = "/home/ftpusers/" + username
+    cmd = ["rmdir",  path]
+    return cmd
+
+
 def cleanError(output):
     if output.startswith('Error'):
         return output
@@ -76,7 +82,8 @@ def jsonToCommandArr(json):
     if json.get('directory') is not None:
         command.append("/home/ftpusers" + json.get('directory'))
     else:
-        folderName = json.get('username').replace('@', '__').replace('.', '_')
+        username = json.get('username').lower()
+        folderName = username.replace('@', '__').replace('.', '_')
         command.append("/home/ftpusers/" + folderName)
     if json.get('download_bandwidth') is not None:
         command.append("-t")
@@ -156,12 +163,15 @@ def delUser():
     if goodApiKey(request.headers):
         if (request.json.get('username') is None):
             return jsonify({"message": "ERROR: missing username"}), 401
-        username = request.json.get('username')
+        username = request.json.get('username').lower()
         options = jsonToCommandArr(request.json)
         pureCmd = commandPureFtp('userdel', username, options)
+        delCmd = deleteUserFolder(username)
         try:
             subprocess.check_output(
                 pureCmd, universal_newlines=True, stderr=subprocess.STDOUT)
+            subprocess.check_output(
+                delCmd, universal_newlines=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             print("Your error: " + cleanError(e.output), file=sys.stderr)
             return jsonify({"message": "ERROR: command", "code": e.returncode, "err": cleanError(e.output)}), 400
@@ -175,7 +185,7 @@ def editUser():
     if goodApiKey(request.headers):
         if (request.json.get('username') is None):
             return jsonify({"message": "ERROR: missing username/password"}), 401
-        username = request.json.get('username')
+        username = request.json.get('username').lower()
         options = jsonToCommandArr(request.json)
         pureCmd = commandPureFtp('usermod', username, options)
         try:
@@ -195,7 +205,7 @@ def setUserPwd():
         if (request.json.get('username') is None or request.json.get('password') is None):
             return jsonify({"message": "ERROR: missing username/password"}), 401
         password = request.json.get('password')
-        username = request.json.get('username')
+        username = request.json.get('username').lower()
         pureCmd = commandPureFtp('passwd', username, ['-m'])
         passpass = confirmPass(password)
         try:
@@ -214,8 +224,9 @@ def getUser():
     if goodApiKey(request.headers):
         if (request.json.get('username') is None):
             return jsonify({"message": "ERROR: missing username"}), 401
+        username = request.json.get('username').lower()
         pureCmd = commandPureFtp(
-            'show', request.json.get('username'), [])
+            'show', username, [])
         try:
             result = subprocess.check_output(
                 pureCmd, universal_newlines=True, stderr=subprocess.STDOUT)
@@ -234,7 +245,7 @@ def addUser():
         if (request.json.get('username') is None or request.json.get('password') is None):
             return jsonify({"message": "ERROR: missing username/password"}), 401
         password = request.json.get('password')
-        username = request.json.get('username')
+        username = request.json.get('username').lower()
         options = jsonToCommandArr(request.json)
         options.append('-u')
         options.append('ftp')
