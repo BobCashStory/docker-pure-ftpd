@@ -19,6 +19,10 @@ def commandPass(password):
     return ["echo", "-e", confirmPass(password)]
 
 
+def commandList():
+    return ["cat", "/etc/pure-ftpd/pureftpd.passwd"]
+
+
 def commandPureFtp(cmd, username, options):
     cmd = ["pure-pw", cmd, username]
     cmd.extend(options)
@@ -69,6 +73,17 @@ def parseInfo(res):
         parsedLine = parseLine(line)
         if (len(parsedLine) > 1):
             result[parsedLine[0].replace(' ', '_')] = parsedLine[1]
+        pass
+    return result
+
+
+def parseListInfo(res):
+    arrRes = res.split('\n')
+    result = []
+    for line in arrRes:
+        if (len(line) > 1):
+            parsedLine = line.split(':')[0]
+            result.append(parsedLine)
         pass
     return result
 
@@ -240,6 +255,22 @@ def getUser():
             result = subprocess.check_output(
                 pureCmd, universal_newlines=True, stderr=subprocess.STDOUT)
             jsonResult = parseInfo(result)
+            return jsonify(jsonResult), 200
+        except subprocess.CalledProcessError as e:
+            print("Your error: " + cleanError(e.output), file=sys.stderr)
+            return jsonify({"message": "ERROR: command", "code": e.returncode, "err": cleanError(e.output)}), 400
+    else:
+        return jsonify({"message": "ERROR: Unauthorized"}), 401
+
+
+@app.route('/user/list', methods=['GET'])
+def getUsers():
+    if goodApiKey(request.headers):
+        listCmd = commandList()
+        try:
+            result = subprocess.check_output(
+                listCmd, universal_newlines=True, stderr=subprocess.STDOUT)
+            jsonResult = parseListInfo(result)
             return jsonify(jsonResult), 200
         except subprocess.CalledProcessError as e:
             print("Your error: " + cleanError(e.output), file=sys.stderr)
