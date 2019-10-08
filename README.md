@@ -37,6 +37,9 @@ curl -X POST --header "X-api-key:YOURAPIKEY" -F 'username=davidwalsh' -F 'passwo
 To get user info
 curl -X GET --header "X-api-key:YOURAPIKEY" -F 'username=davidwalsh' localhost:5000/user/info
 
+To get list all username
+curl -X GET --header "X-api-key:YOURAPIKEY" localhost:5000/user/list
+
 To delete user
 curl -X POST --header "X-api-key:YOURAPIKEY" -F 'username=davidwalsh' localhost:5000/user/del
 
