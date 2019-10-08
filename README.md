@@ -49,6 +49,9 @@ curl -X POST --header "X-api-key:YOURAPIKEY" -F 'username=davidwalsh' -F 'archiv
 To update user
 curl -X PUT --header "X-api-key:YOURAPIKEY" -F 'username=davidwalsh' -F 'directory=toto' localhost:5000/user/edit
 
+To update user password
+curl -X PUT --header "X-api-key:YOURAPIKEY" -F 'username=davidwalsh' -F 'password=toto' localhost:5000/user/password
+
 all allowed config for `add` and `edit`, to understand better check https://download.pureftpd.org/pub/pure-ftpd/doc/README.Virtual-Users
 ```
 {
