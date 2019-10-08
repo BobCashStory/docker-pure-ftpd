@@ -5,14 +5,28 @@ import os
 import sys
 import subprocess
 from os import urandom
+from escapism import escape
+import string
 
 app = Flask(__name__)
+
+_docker_safe_chars = set(string.ascii_letters + string.digits + "-")
+_docker_escape_char = "_"
 
 apiKey = urandom(30).hex()
 if os.getenv('X_API_KEY') is not None:
     apiKey = os.environ['X_API_KEY']
 else:
     print("Your X-Api-Key is: " + apiKey)
+
+
+def _escape(s):
+    """Escape a string to docker-safe characters"""
+    return escape(
+        s,
+        safe=_docker_safe_chars,
+        escape_char=_docker_escape_char,
+    )
 
 
 def commandPass(password):
@@ -100,7 +114,7 @@ def jsonToCommandArr(json):
         command.append("/home/ftpusers" + json.get('directory'))
     else:
         username = json.get('username').lower()
-        folderName = username.replace('@', '--').replace('.', '-')
+        folderName = _escape(username)
         command.append("/home/ftpusers/" + folderName)
     if json.get('download_bandwidth') is not None:
         command.append("-t")

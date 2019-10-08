@@ -37,6 +37,7 @@ RUN apk update && \
 	# pip3 install uwsgi \	
 	# Install Flask for api 
 	pip3 install Flask \
+	escapism \
 	# Install chaperone to manage services	
 	chaperone && \
 	# Create folder for chaperone
