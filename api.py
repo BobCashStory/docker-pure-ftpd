@@ -1,5 +1,6 @@
 #!/bin/python3
 
+from gevent.pywsgi import WSGIServer
 from flask import Flask, request, jsonify
 import os
 import sys
@@ -317,4 +318,6 @@ def addUser():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    # app.run(host='0.0.0.0')
+    http_server = WSGIServer(('', 5000), app)
+    http_server.serve_forever()
