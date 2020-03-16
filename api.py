@@ -8,7 +8,9 @@ import subprocess
 from os import urandom
 from escapism import escape
 import string
+import logging
 
+logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 
 _docker_safe_chars = set(string.ascii_letters + string.digits + "-")
@@ -18,7 +20,7 @@ apiKey = urandom(30).hex()
 if os.getenv('X_API_KEY') is not None:
     apiKey = os.environ['X_API_KEY']
 else:
-    print("Your X-Api-Key is: " + apiKey)
+    logging.info("Your X-Api-Key is: " + apiKey)
 
 
 def _escape(s):
@@ -202,17 +204,19 @@ def delUser():
             subprocess.check_output(
                 pureCmd, universal_newlines=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
-            print("Your error: " + cleanError(e.output), file=sys.stderr)
+            logging.error("Your error: " +
+                          cleanError(e.output), file=sys.stderr)
             return jsonify({"message": "ERROR: command", "code": e.returncode, "err": cleanError(e.output)}), 400
         archive = request.json.get('archive')
         if (archive is None or archive == 'false'):
             delCmd = deleteUserFolder(username)
-            print("Delete cmd: " + ' '.join(delCmd), file=sys.stderr)
+            logging.info("Delete cmd: " + ' '.join(delCmd), file=sys.stderr)
             try:
                 subprocess.check_output(
                     delCmd, universal_newlines=True, stderr=subprocess.STDOUT)
             except subprocess.CalledProcessError as e:
-                print("Your error: " + cleanError(e.output), file=sys.stderr)
+                logging.error("Your error: " +
+                              cleanError(e.output), file=sys.stderr)
                 return jsonify({"message": "ERROR: command", "code": e.returncode, "err": cleanError(e.output)}), 400
         return jsonify({"message": "OK: Deleted"}), 200
     else:
@@ -231,7 +235,8 @@ def editUser():
             subprocess.check_output(
                 pureCmd, universal_newlines=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
-            print("Your error: " + cleanError(e.output), file=sys.stderr)
+            logging.error("Your error: " +
+                          cleanError(e.output), file=sys.stderr)
             return jsonify({"message": "ERROR: command", "code": e.returncode, "err": cleanError(e.output)}), 400
         return jsonify({"message": "OK: Edited"}), 200
     else:
@@ -251,7 +256,8 @@ def setUserPwd():
             subprocess.check_output(
                 pureCmd, universal_newlines=True, input=passpass, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
-            print("Your error: " + cleanError(e.output), file=sys.stderr)
+            logging.error("Your error: " +
+                          cleanError(e.output), file=sys.stderr)
             return jsonify({"message": "ERROR: command", "code": e.returncode, "err": cleanError(cleanError(e.output))}), 400
         return jsonify({"message": "OK: password updated"}), 200
     else:
@@ -272,7 +278,8 @@ def getUser():
             jsonResult = parseInfo(result)
             return jsonify(jsonResult), 200
         except subprocess.CalledProcessError as e:
-            print("Your error: " + cleanError(e.output), file=sys.stderr)
+            logging.error("Your error: " +
+                          cleanError(e.output), file=sys.stderr)
             return jsonify({"message": "ERROR: command", "code": e.returncode, "err": cleanError(e.output)}), 400
     else:
         return jsonify({"message": "ERROR: Unauthorized"}), 401
@@ -288,7 +295,8 @@ def getUsers():
             jsonResult = parseListInfo(result)
             return jsonify(jsonResult), 200
         except subprocess.CalledProcessError as e:
-            print("Your error: " + cleanError(e.output), file=sys.stderr)
+            logging.error("Your error: " +
+                          cleanError(e.output), file=sys.stderr)
             return jsonify({"message": "ERROR: command", "code": e.returncode, "err": cleanError(e.output)}), 400
     else:
         return jsonify({"message": "ERROR: Unauthorized"}), 401
@@ -310,7 +318,8 @@ def addUser():
             subprocess.check_output(
                 pureCmd, universal_newlines=True, input=passpass, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
-            print("Your error: " + cleanError(e.output), file=sys.stderr)
+            logging.error("Your error: " +
+                          cleanError(e.output), file=sys.stderr)
             return jsonify({"message": "ERROR: command", "code": e.returncode, "err": cleanError(e.output)}), 400
         return jsonify({"message": "OK: Created"}), 200
     else:
