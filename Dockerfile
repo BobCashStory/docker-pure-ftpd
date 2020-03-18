@@ -25,9 +25,9 @@ ENV FTP_MAX_CONNECTIONS 5
 
 # Install Git
 RUN apk update && \
+	apk add --no-cache --virtual .build-deps gcc musl-dev && \
 	apk add --no-cache \
 	bash \
-	gcc \
 	# dep for pure-ftpd
 	openssl \
 	# Install dep uwsgi
@@ -65,7 +65,8 @@ RUN apk update && \
 	cd .. && \
 	rm -rf /tmp/* && \
 	apk del .build-deps && \
-	rm -rf /tmp/* /var/tmp/* /var/cache/apk/*
+	rm -rf /tmp/* /var/tmp/* /var/cache/apk/* && \
+	apk del .build-deps gcc musl-dev
 
 # Copy chaperone config
 COPY confs/chaperone.conf /etc/chaperone.d/chaperone.conf
