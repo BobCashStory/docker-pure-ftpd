@@ -33,17 +33,6 @@ RUN apk update && \
 	# python3-dev build-base linux-headers pcre-dev \
 	# Install tzdata for cron job
 	tzdata && \
-	# Install uwsgi
-	# pip3 install uwsgi \	
-	# Install Flask for api 
-	pip3 install Flask \
-	gevent \
-	escapism \
-	# Install chaperone to manage services	
-	chaperone && \
-	# Create folder for chaperone
-	mkdir -p /etc/chaperone.d && \
-	# Build and install pure-ftpd	
 	set -ex && \
 	apk add --no-cache --virtual .build-deps \
 	gcc musl-dev \
@@ -65,10 +54,21 @@ RUN apk update && \
 	cd .. && \
 	rm -rf /tmp/* && \
 	apk del .build-deps gcc musl-dev  && \
-	rm -rf /tmp/* /var/tmp/* /var/cache/apk/*
+	rm -rf /tmp/* /var/tmp/* /var/cache/apk/* && \
+	# Install uwsgi
+	# pip3 install uwsgi \	
+	# Install Flask for api 
+	pip3 install Flask \
+	gevent \
+	escapism \
+	# Install chaperone to manage services	
+	chaperone && \
+	# Create folder for chaperone
+	mkdir -p /etc/chaperone.d && \
+	# Build and install pure-ftpd	
 
-# Copy chaperone config
-COPY confs/chaperone.conf /etc/chaperone.d/chaperone.conf
+	# Copy chaperone config
+	COPY confs/chaperone.conf /etc/chaperone.d/chaperone.conf
 
 # copy api
 COPY api.py /bin/api.py
