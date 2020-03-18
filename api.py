@@ -9,8 +9,12 @@ from os import urandom
 from escapism import escape
 import string
 import logging
+from logging.handlers import RotatingFileHandler
+from time import strftime
+import datetime
+import time
+import traceback
 
-logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 
 _docker_safe_chars = set(string.ascii_letters + string.digits + "-")
@@ -331,7 +335,31 @@ def addUser():
         return jsonify({"message": "ERROR: Unauthorized"}), 401
 
 
+@app.after_request
+def after_request(response):
+    timestamp = strftime('[%Y-%b-%d %H:%M]')
+    logger.error('%s %s %s %s %s %s', timestamp, request.remote_addr,
+                 request.method, request.scheme, request.full_path, response.status)
+    return response
+
+
+@app.errorhandler(Exception)
+def exceptions(e):
+    tb = traceback.format_exc()
+    timestamp = strftime('[%Y-%b-%d %H:%M]')
+    logger.error('%s %s %s %s %s 5xx INTERNAL SERVER ERROR\n%s', timestamp,
+                 request.remote_addr, request.method, request.scheme, request.full_path, tb)
+    return e.status_code
+
+
 if __name__ == '__main__':
-    # app.run(host='0.0.0.0')
+    logging.basicConfig(level=logging.INFO)
+    handler = RotatingFileHandler('app.log', maxBytes=100000, backupCount=3)
+    logger = logging.getLogger('tdm')
+    logger.addHandler(handler)
+    # Debug/Development
+    # app.run(debug=True, host="0.0.0.0", port="5000")
+    # Production
+    logging.info(f'==> start API {time.time()}\n')
     http_server = WSGIServer(('', 5000), app)
     http_server.serve_forever()
