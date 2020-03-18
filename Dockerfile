@@ -52,9 +52,6 @@ RUN apk update && \
 	--without-inetd && \
 	make install-strip && \
 	cd .. && \
-	rm -rf /tmp/* && \
-	apk del .build-deps gcc musl-dev  && \
-	rm -rf /tmp/* /var/tmp/* /var/cache/apk/* && \
 	# Install uwsgi
 	# pip3 install uwsgi \	
 	# Install Flask for api 
@@ -64,11 +61,14 @@ RUN apk update && \
 	# Install chaperone to manage services	
 	chaperone && \
 	# Create folder for chaperone
-	mkdir -p /etc/chaperone.d && \
-	# Build and install pure-ftpd	
-
+	mkdir -p /etc/chaperone && \
+	# Build and install pure-ftpd
 	# Copy chaperone config
-	COPY confs/chaperone.conf /etc/chaperone.d/chaperone.conf
+	rm -rf /tmp/* && \
+	apk del .build-deps gcc musl-dev  && \
+	rm -rf /tmp/* /var/tmp/* /var/cache/apk/*
+
+COPY confs/chaperone.conf /etc/chaperone.d/chaperone.conf
 
 # copy api
 COPY api.py /bin/api.py
