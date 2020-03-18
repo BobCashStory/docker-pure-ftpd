@@ -192,6 +192,11 @@ def not_working(error):
     return jsonify({'error': 'Something wrong happen'}), 500
 
 
+@app.route('/')
+def statusRun():
+    return jsonify({'status': 'ready'}), 200
+
+
 @app.route('/user/del', methods=['POST'])
 def delUser():
     if goodApiKey(request.headers):
