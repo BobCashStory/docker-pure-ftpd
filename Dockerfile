@@ -25,7 +25,6 @@ ENV FTP_MAX_CONNECTIONS 5
 
 # Install Git
 RUN apk update && \
-	apk add --no-cache --virtual .build-deps gcc musl-dev && \
 	apk add --no-cache \
 	bash \
 	# dep for pure-ftpd
@@ -47,6 +46,7 @@ RUN apk update && \
 	# Build and install pure-ftpd	
 	set -ex && \
 	apk add --no-cache --virtual .build-deps \
+	gcc musl-dev \
 	build-base \
 	curl \
 	openssl-dev \
@@ -64,9 +64,8 @@ RUN apk update && \
 	make install-strip && \
 	cd .. && \
 	rm -rf /tmp/* && \
-	apk del .build-deps && \
-	rm -rf /tmp/* /var/tmp/* /var/cache/apk/* && \
-	apk del .build-deps gcc musl-dev
+	apk del .build-deps gcc musl-dev  && \
+	rm -rf /tmp/* /var/tmp/* /var/cache/apk/*
 
 # Copy chaperone config
 COPY confs/chaperone.conf /etc/chaperone.d/chaperone.conf
