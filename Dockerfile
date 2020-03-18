@@ -27,6 +27,7 @@ ENV FTP_MAX_CONNECTIONS 5
 RUN apk update && \
 	apk add --no-cache \
 	bash \
+	gcc \
 	# dep for pure-ftpd
 	openssl \
 	# Install dep uwsgi
