@@ -17,8 +17,8 @@ import traceback
 
 app = Flask(__name__)
 
-_docker_safe_chars = set(string.ascii_letters + string.digits + "-")
-_docker_escape_char = "_"
+_docker_safe_chars = set(string.ascii_lowercase + string.digits)
+_docker_escape_char = "-"
 
 apiKey = urandom(30).hex()
 if os.getenv('X_API_KEY') is not None:
@@ -29,11 +29,12 @@ else:
 
 def _escape(s):
     """Escape a string to docker-safe characters"""
+    sLow = s.lower()
     return escape(
-        s,
+        sLow,
         safe=_docker_safe_chars,
         escape_char=_docker_escape_char,
-    )
+    ).lower()
 
 
 def commandPass(password):
