@@ -29,6 +29,7 @@ RUN apk update && \
 	bash \
 	# dep for pure-ftpd
 	openssl \
+	libffi-dev openssl-dev python3-dev \
 	# Install dep uwsgi
 	# python3-dev build-base linux-headers pcre-dev \
 	# Install tzdata for cron job
